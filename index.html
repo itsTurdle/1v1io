@@ -1,25 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DVD Logo Screensaver</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: black; }
+    img { display: block; width: 100%; height: 100%; }
+  </style>
+</head>
 <body>
-<h1>The Window Object</h1>
-<h2>The resizeTo() Method</h2>
-
-<p>Open a new window, and resize it to 300 x 300:</p>
-
-<button onclick="openWin()">Create window</button>
-<button onclick="resizeWin()">Resize window</button>
-
 <script>
-let myWindow;
+  let myWindow;
+  const winW = 200;
+  const winH = 100;
+  let x = 0;
+  let y = 0;
+  let dx = 5;
+  let dy = 5;
 
-function openWin() {
-  myWindow = window.open("", "", "width=200, height=100");
-}
+  function animate() {
+    // Close previous window
+    if (myWindow && !myWindow.closed) myWindow.close();
 
-function resizeWin() {
-  myWindow.resizeTo(300, 300);
-}
+    // Open new window at updated position
+    myWindow = window.open("", "", `width=${winW},height=${winH},left=${x},top=${y}`);
+    myWindow.document.write(
+      `<!DOCTYPE html>
+      <html><head><title>DVD Logo</title></head>
+      <body style="margin:0;overflow:hidden;background:black;">
+        <img src="dvd-logo.png" alt="DVD Logo">
+      </body></html>`
+    );
+
+    // Update position
+    x += dx;
+    y += dy;
+
+    // Bounce off edges of available screen
+    const maxX = screen.availWidth - winW;
+    const maxY = screen.availHeight - winH;
+    if (x <= 0 || x >= maxX) dx = -dx;
+    if (y <= 0 || y >= maxY) dy = -dy;
+  }
+
+  // Start animation loop
+  setInterval(animate, 100);
 </script>
-
 </body>
 </html>
