@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resizable and Moving Window</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #282c34;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Window Resizing and Moving</h1>
+
+<script>
+  function resizeAndMove() {
+    // Randomize window size within a range
+    let width = Math.floor(Math.random() * (window.screen.width - 300)) + 300;
+    let height = Math.floor(Math.random() * (window.screen.height - 200)) + 200;
+
+    // Randomize window position within screen boundaries
+    let left = Math.floor(Math.random() * (window.screen.width - width));
+    let top = Math.floor(Math.random() * (window.screen.height - height));
+
+    // Resize and move window
+    window.resizeTo(width, height);
+    window.moveTo(left, top);
+  }
+
+  // Constantly resize and move the window every 500ms
+  setInterval(resizeAndMove, 500);
+</script>
+
+</body>
+</html>
