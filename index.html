@@ -4,49 +4,81 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DVD Logo Screensaver</title>
+  <title>Fullscreen DVD Screensaver</title>
   <style>
-    body { margin: 0; overflow: hidden; background: black; }
-    img { display: block; width: 100%; height: 100%; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: black; overflow: hidden;
+      position: relative;
+    }
+    /* Hide mouse cursor once in fullscreen */
+    :fullscreen, :-webkit-full-screen {
+      cursor: none;
+    }
+    #startBtn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      z-index: 1000;
+    }
+    img#dvdLogo {
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      will-change: transform;
+    }
   </style>
 </head>
 <body>
-<script>
-  let myWindow;
-  const winW = 200;
-  const winH = 100;
-  let x = 0;
-  let y = 0;
-  let dx = 5;
-  let dy = 5;
+  <button id="startBtn">Start Screensaver</button>
+  <script>
+    const winW = 200;
+    const winH = 100;
+    let x = 0;
+    let y = 0;
+    let dx = 15;
+    let dy = 15;
+    let logo;
 
-  function animate() {
-    // Close previous window
-    if (myWindow && !myWindow.closed) myWindow.close();
+    document.getElementById('startBtn').addEventListener('click', async () => {
+      // Hide the button
+      document.getElementById('startBtn').style.display = 'none';
 
-    // Open new window at updated position
-    myWindow = window.open("", "", `width=${winW},height=${winH},left=${x},top=${y}`);
-    myWindow.document.write(
-      `<!DOCTYPE html>
-      <html><head><title>DVD Logo</title></head>
-      <body style="margin:0;overflow:hidden;background:black;">
-        <img src="dvd-logo.png" alt="DVD Logo">
-      </body></html>`
-    );
+      // Enter fullscreen and hide cursor
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        await document.documentElement.webkitRequestFullscreen();
+      }
+      document.body.style.cursor = 'none';
 
-    // Update position
-    x += dx;
-    y += dy;
+      // Create the DVD logo
+      logo = document.createElement('img');
+      logo.id = 'dvdLogo';
+      logo.src = 'dvd-logo.png';
+      logo.style.left = x + 'px';
+      logo.style.top = y + 'px';
+      document.body.appendChild(logo);
 
-    // Bounce off edges of available screen
-    const maxX = screen.availWidth - winW;
-    const maxY = screen.availHeight - winH;
-    if (x <= 0 || x >= maxX) dx = -dx;
-    if (y <= 0 || y >= maxY) dy = -dy;
-  }
-
-  // Start animation loop
-  setInterval(animate, 100);
-</script>
+      // Animate
+      setInterval(() => {
+        x += dx;
+        y += dy;
+        const maxX = window.innerWidth - winW;
+        const maxY = window.innerHeight - winH;
+        if (x <= 0 || x >= maxX) dx = -dx;
+        if (y <= 0 || y >= maxY) dy = -dy;
+        logo.style.transform = `translate(${x}px, ${y}px)`;
+      }, 60);
+    });
+  </script>
 </body>
 </html>
